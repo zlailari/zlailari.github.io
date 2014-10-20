@@ -1,21 +1,8 @@
 //@author Ze'ev Lailari
-// Original code from -> http://html5gamedev.samlancashire.com/making-a-simple-html5-canvas-game-part-3-drawing-images/
+// Inspiration from -> github.com/Anemy/Personal-Site
 
-var canvas = document.getElementById('canvas');
-var ctx = canvas.getContext('2d');
-
-ctx.fillStyle = "#000000";
-// var radgrad4 = ctx.createLinearGradient(0,0,0,canvas.height);
-//     radgrad4.addColorStop(0, "white");
-//     radgrad4.addColorStop(1, "#FFFF90");
-
-// ctx.fillStyle = radgrad4;
-ctx.fillRect(0,0,canvas.width,canvas.height);
-
-canvas.width = 600;
-canvas.height = 400;
-
-var timeCounter = 0;
+var canvas,ctx;
+var time;
 
 var blockSize = 30;
 var numAnemies = 3;
@@ -23,20 +10,15 @@ var rend = 0;
 
 var dogR, dogL, dogRPara, dogLPara, para;
 var dogImage = dogR;
-dogRPara = new Image();
-dogRPara.src = (("game/pics/DogRPara.png"));
-dogLPara = new Image();
-dogLPara.src = (("game/pics/DogLPara.png"));
-dogR = new Image();
-dogR.src = (("game/pics/DogR.png"));
-dogL = new Image();
-dogL.src = (("game/pics/DogL.png"));
-dogImage = dogRPara;
-para = new Image();
-para.src = (("game/pics/para.png"));
 
-loadImages();
 var downwards;
+
+var jump;
+var fallspeed = 4;
+
+var originalWidth = 600;
+var originalHeight = 400;
+
 var pops = {
     x: 200,
     y: 200,
@@ -59,18 +41,31 @@ for(var i=0;i<numAnemies;i++) {
     });
 }
 
-// var Anemy = {
-//     x: -,
-//     y: 200,
-//     width: 2*,
-//     height: blockSize,
-//     x_speed: 200,
-//     y_speed: 0,
-//     color: '#c00'
-// };
+function init() {
+    canvas = document.getElementById('canvas');
+    ctx = canvas.getContext('2d');
 
-var jump;
-var fallspeed = 4;
+    gameWidth = window.innerWidth-300;
+    gameHeight = window.innerHeight-300;
+    
+    ctx.canvas.width = gameWidth;
+    ctx.canvas.height = gameHeight;
+    
+    scale = gameWidth/originalWidth;
+    yScale = gameHeight/originalHeight;
+
+    loadImages();
+
+    resetGame();
+
+    time = Date.now();
+
+    setInterval(run, 10);
+}
+
+function resetGame() {
+
+}
 
 function loadImages() {
     //dogs
@@ -106,7 +101,7 @@ function update(mod) {
     if (38 in keysDown) {
         // pops.y -= pops.speed * mod;
         if(!jump) {
-            pops.y_speed = -canvas.height/2 - (4000/pops.height);
+            pops.y_speed = -canvas.height/2 - (1000/pops.height);
             fallspeed = 1;
             jump = true; 
         }
@@ -199,11 +194,13 @@ function popsEnforceBounds() {
 }
  
 function render() {
-    // if (rend%2 == 0) {
-    ctx.fillStyle = '#FFF';
-    // } else {
-        // ctx.fillStyle = radgrad4;
-    // }
+    ctx.fillStyle = "#FFFFFF";
+    // var radgrad4 = ctx.createLinearGradient(0,0,0,canvas.height);
+    //     radgrad4.addColorStop(0, "white");
+    //     radgrad4.addColorStop(1, "#FFFF90");
+
+    // ctx.fillStyle = radgrad4;
+
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     for(var i=0; i<numAnemies;i++) {
@@ -218,16 +215,9 @@ function render() {
 }
  
 function run() {
-    timeCounter += 1;
-    if(timeCounter==2) {
-        moveAnemies();
-        timeCounter = 0;
-    }
+
+    moveAnemies();
     update((Date.now() - time) / 1000);
     render();
     time = Date.now();
 }
- 
-
-var time = Date.now();
-setInterval(run, 10);
