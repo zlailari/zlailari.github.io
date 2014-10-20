@@ -23,6 +23,17 @@ var rend = 0;
 
 var dogR, dogL, dogRPara, dogLPara, para;
 var dogImage = dogR;
+dogRPara = new Image();
+dogRPara.src = (("game/pics/DogRPara.png"));
+dogLPara = new Image();
+dogLPara.src = (("game/pics/DogLPara.png"));
+dogR = new Image();
+dogR.src = (("game/pics/DogR.png"));
+dogL = new Image();
+dogL.src = (("game/pics/DogL.png"));
+dogImage = dogRPara;
+para = new Image();
+para.src = (("game/pics/para.png"));
 
 loadImages();
 var downwards;
