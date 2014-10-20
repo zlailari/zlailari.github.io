@@ -21,6 +21,9 @@ var blockSize = 30;
 var numAnemies = 3;
 var rend = 0;
 
+var dogR, dogL, dogRPara, dogLPara, para;
+var dogImage = dogR;
+
 loadImages();
 var downwards;
 var pops = {
@@ -55,8 +58,6 @@ for(var i=0;i<numAnemies;i++) {
 //     color: '#c00'
 // };
 
-var dogR, dogL, dogRPara, dogLPara;
-var dogImage = dogR;
 var jump;
 var fallspeed = 4;
 
