@@ -36,7 +36,7 @@ var Anemies = [];
 for(var i=0;i<numAnemies;i++) {
     Anemies.push({
     x: i*100,
-    y: 100,
+    y: 100*Math.random(),
     width: blockSize*2,
     height: blockSize,
     x_speed: 2,
