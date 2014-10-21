@@ -19,11 +19,15 @@ var fallspeed = 4;
 var originalWidth = 600;
 var originalHeight = 400;
 
+var blockUpdateCounter = 0;
+var onBlock = -1;
+
 var pops = {
     x: 200,
     y: 200,
     width: blockSize,
     height: blockSize,
+    mid: 200+(blockSize/2),
     x_speed: 200,
     y_speed: 0,
     color: '#c00'
@@ -31,7 +35,7 @@ var pops = {
 var Anemies = [];
 for(var i=0;i<numAnemies;i++) {
     Anemies.push({
-    x: i*100,
+    x: (600-blockSize)*Math.random(),
     y: 100*Math.random(),
     width: blockSize*2,
     height: blockSize,
@@ -119,6 +123,7 @@ function update(mod) {
 
     popsGravity();
     popsEnforceBounds();
+    pops.mid = pops.x + (pops.width/2);
 }
 
 function popsGravity() {
@@ -146,24 +151,24 @@ function popsGravity() {
 function moveAnemies(mod) {
     for (var i=0;i<numAnemies;i++) {
 
-        if(Anemies[i].x>canvas.width/2) {
-            Anemies[i].x_speed -= 1;
-        } else if(Anemies[i].x>canvas.width/2) {
-            Anemies[i].x_speed -= .5;
-        } else if(Anemies[i].x<canvas.width/2) {
-            Anemies[i].x_speed += .5;
+        if(Anemies[i].x>(canvas.width/2)) {
+            Anemies[i].x_speed -= .25;
+        } else if(Anemies[i].x>(canvas.width/2)) {
+            Anemies[i].x_speed -= .125;
+        } else if(Anemies[i].x<(canvas.width/2)) {
+            Anemies[i].x_speed += .125;
         } else {
-            Anemies[i].x_speed += 1;
+            Anemies[i].x_speed += 25;
         }
 
-        if(Anemies[i].y>canvas.height/2) {
-            Anemies[i].y_speed -= 1;
-        } else if(Anemies[i].y>canvas.height/2) {
-            Anemies[i].y_speed -= .5;
-        } else if(Anemies[i].y<canvas.height/2) {
-            Anemies[i].y_speed += .5;
+        if(Anemies[i].y>(canvas.height/2)) {
+            Anemies[i].y_speed -= .25;
+        } else if(Anemies[i].y>(canvas.height/2)) {
+            Anemies[i].y_speed -= .125;
+        } else if(Anemies[i].y<(canvas.height/2)) {
+            Anemies[i].y_speed += .125;
         } else {
-            Anemies[i].y_speed += 1;
+            Anemies[i].y_speed += .25;
         }
     }
     for (var j=0;j<numAnemies;j++) {
@@ -213,11 +218,33 @@ function render() {
         ctx.drawImage(para, pops.x, pops.y-pops.height, pops.width, pops.height);        
     }
 }
+
+function resetPops() {
+    onBlock = -1;
+    pops.x_speed = 200;
+}
+
+function collisions() {
+    for (var i=0;i<numAnemies;i++) {
+        if (pops.y > (Anemies[i].y-Anemies[i].height) && pops.y < (Anemies[i].y)) {
+            if (pops.mid > Anemies[i].x && pops.mid < (Anemies[i].x+Anemies[i].width)) {
+                onBlock = i;
+            } else { resetPops() }
+        } else { resetPops() }
+    }
+    if (onBlock > -1) {
+        pops.x_speed = Anemies[onBlock].x_speed;
+        pops.y_speed = Anemies[onBlock].y_speed;
+    }
+}
  
 function run() {
-
-    moveAnemies();
+    if(blockUpdateCounter > 1) {
+        moveAnemies();
+        blockUpdateCounter = 0;
+    } blockUpdateCounter++;
     update((Date.now() - time) / 1000);
+    collisions();
     render();
     time = Date.now();
 }
