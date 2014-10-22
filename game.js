@@ -28,8 +28,9 @@ var pops = {
     width: blockSize,
     height: blockSize,
     mid: 200+(blockSize/2),
-    x_speed: 200,
-    y_speed: 0,
+    mov_speed: 200,
+    x_vel: 0,
+    y_vel: 0,
     color: '#c00'
 };
 var Anemies = [];
@@ -39,8 +40,8 @@ for(var i=0;i<numAnemies;i++) {
     y: 100*Math.random(),
     width: blockSize*2,
     height: blockSize,
-    x_speed: 2,
-    y_speed: 2,
+    x_vel: 2,
+    y_vel: 2,
     color: '#c00'
     });
 }
@@ -98,28 +99,30 @@ function update(mod) {
     // Control keys
     // left
     if (37 in keysDown) {
-        pops.x -= pops.x_speed * mod;
+        pops.x -= pops.mov_speed * mod;
         dogImage = dogL;
     }
     // up
     if (38 in keysDown) {
         // pops.y -= pops.speed * mod;
         if(!jump) {
-            pops.y_speed = -canvas.height/2 - (1000/pops.height);
+            pops.y_vel = -canvas.height/2 - (1000/pops.height);
             fallspeed = 1;
             jump = true; 
-        }
+        } 
     }
     // right
     if (39 in keysDown) {
-        pops.x += pops.x_speed * mod;
+        pops.x += pops.mov_speed * mod;
         dogImage = dogR;
     }
     // down
     if (40 in keysDown) {
         // pops.y += pops.speed * mod;
     }
-    pops.y += pops.y_speed * mod;
+    pops.y += pops.y_vel * mod;
+    pops.x -= pops.x_vel * mod;
+
 
     popsGravity();
     popsEnforceBounds();
@@ -127,10 +130,10 @@ function update(mod) {
 }
 
 function popsGravity() {
-     if(pops.y_speed < canvas.height/4) {
-        pops.y_speed += fallspeed;
+     if(pops.y_vel < canvas.height/4) {
+        pops.y_vel += fallspeed;
     }
-    if(pops.y_speed > 15) {
+    if(pops.y_vel > 15) {
         downwards = true;
         fallspead = 2;
         if(dogImage === dogL || dogImage === dogLPara) {
@@ -152,28 +155,28 @@ function moveAnemies(mod) {
     for (var i=0;i<numAnemies;i++) {
 
         if(Anemies[i].x>(canvas.width/2)) {
-            Anemies[i].x_speed -= .25;
+            Anemies[i].x_vel -= .25;
         } else if(Anemies[i].x>(canvas.width/2)) {
-            Anemies[i].x_speed -= .125;
+            Anemies[i].x_vel -= .125;
         } else if(Anemies[i].x<(canvas.width/2)) {
-            Anemies[i].x_speed += .125;
+            Anemies[i].x_vel += .125;
         } else {
-            Anemies[i].x_speed += 25;
+            Anemies[i].x_vel += 25;
         }
 
         if(Anemies[i].y>(canvas.height/2)) {
-            Anemies[i].y_speed -= .25;
+            Anemies[i].y_vel -= .25;
         } else if(Anemies[i].y>(canvas.height/2)) {
-            Anemies[i].y_speed -= .125;
+            Anemies[i].y_vel -= .125;
         } else if(Anemies[i].y<(canvas.height/2)) {
-            Anemies[i].y_speed += .125;
+            Anemies[i].y_vel += .125;
         } else {
-            Anemies[i].y_speed += .25;
+            Anemies[i].y_vel += .25;
         }
     }
     for (var j=0;j<numAnemies;j++) {
-        Anemies[j].x += Anemies[j].x_speed;
-        Anemies[j].y += Anemies[j].y_speed;
+        Anemies[j].x += Anemies[j].x_vel;
+        Anemies[j].y += Anemies[j].y_vel;
     }
 
 
@@ -186,14 +189,14 @@ function popsEnforceBounds() {
     }
     if (pops.y < 0) {
         pops.y = 5;
-        pops.y_speed = 1;
+        pops.y_vel = 1;
     }
     if (pops.x > (canvas.width-pops.width)) {
         pops.x = canvas.width-pops.width;
     }
     if (pops.y > (canvas.height-pops.height)) {
         pops.y = canvas.height-pops.height;
-        pops.y_speed = 0;
+        pops.y_vel = 0;
         jump = false;
     }
 }
@@ -221,20 +224,30 @@ function render() {
 
 function resetPops() {
     onBlock = -1;
-    pops.x_speed = 200;
+    pops.x_vel = 0;
+}
+
+function bounce(i) {
+    pops.x_vel *= -1;
+    pops.x_vel *= -1;
+    Anemies[i].x_vel *= -1;
+    Anemies[i].x_vel *= -1;
+
 }
 
 function collisions() {
     for (var i=0;i<numAnemies;i++) {
         if (pops.y > (Anemies[i].y-Anemies[i].height) && pops.y < (Anemies[i].y)) {
             if (pops.mid > Anemies[i].x && pops.mid < (Anemies[i].x+Anemies[i].width)) {
-                onBlock = i;
+                // onBlock = i;
+                // jump = false;
+                bounce(i);
             } else { resetPops() }
         } else { resetPops() }
     }
     if (onBlock > -1) {
-        pops.x_speed = Anemies[onBlock].x_speed;
-        pops.y_speed = Anemies[onBlock].y_speed;
+        pops.x_vel = Anemies[onBlock].x_vel;
+        pops.y_vel = Anemies[onBlock].y_vel;
     }
 }
  
