@@ -84,7 +84,7 @@ function loadImages() {
     dogL.src = (("game/pics/DogL.png"));
     dogImage = dogRPara;
     para = new Image();
-    para.src = (("game/pics/para.png"));
+    para.src = (("game/pics/Para.png"));
 }
  
 var keysDown = {};
