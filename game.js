@@ -5,13 +5,13 @@ var canvas,ctx;
 var time;
 
 var blockSize = 30;
-var numAnemies = 3;
+var numAnemies = 8;
 var rend = 0;
 
-var dogR, dogL, dogRPara, dogLPara, para;
+var dogR, dogL, dogRPara, dogLPara, para, bg, astr;
 var dogImage = dogR;
 
-var downwards;
+var downwards = true;
 
 var jump;
 var fallspeed = 4;
@@ -36,26 +36,29 @@ var pops = {
 var Anemies = [];
 for(var i=0;i<numAnemies;i++) {
     Anemies.push({
-    x: (600-blockSize)*Math.random(),
+    x: (1000-blockSize)*Math.random(),
     y: 100*Math.random(),
     width: blockSize*2,
     height: blockSize,
-    x_vel: 2,
-    y_vel: 2,
+    x_vel: 2*Math.random()+1.5,
+    y_vel: Math.random()+.5,
     color: '#c00'
     });
 }
 
 function init() {
-    canvas = document.getElementById('canvas');
+    canvas = document.getElementById('bCanvas');
     ctx = canvas.getContext('2d');
 
     gameWidth = window.innerWidth-300;
     gameHeight = window.innerHeight-300;
     
-    ctx.canvas.width = gameWidth;
-    ctx.canvas.height = gameHeight;
-    
+    // ctx.canvas.width = gameWidth;
+    // ctx.canvas.height = gameHeight;
+
+    ctx.canvas.width = window.innerWidth;
+    ctx.canvas.height= window.innerHeight;
+
     scale = gameWidth/originalWidth;
     yScale = gameHeight/originalHeight;
 
@@ -74,6 +77,8 @@ function resetGame() {
 
 function loadImages() {
     //dogs
+    astr = new Image();
+    astr.src = (("game/pics/Astroid.png"));
     dogRPara = new Image();
     dogRPara.src = (("game/pics/DogRPara.png"));
     dogLPara = new Image();
@@ -85,6 +90,8 @@ function loadImages() {
     dogImage = dogRPara;
     para = new Image();
     para.src = (("game/pics/Para.png"));
+    bg = new Image();
+    bg.src = (("game/pics/SpaceBackground.jpg"));
 }
  
 var keysDown = {};
@@ -106,7 +113,7 @@ function update(mod) {
     if (38 in keysDown) {
         // pops.y -= pops.speed * mod;
         if(!jump) {
-            pops.y_vel = -canvas.height/2 - (1000/pops.height);
+            pops.y_vel = -canvas.height/2 - (4000/pops.height);
             fallspeed = 1;
             jump = true; 
         } 
@@ -121,8 +128,18 @@ function update(mod) {
         // pops.y += pops.speed * mod;
     }
     pops.y += pops.y_vel * mod;
-    pops.x -= pops.x_vel * mod;
+    pops.x += pops.x_vel * mod;
 
+    if (pops.x_vel > 0) {
+        pops.x_vel -= 10;
+    } else if (pops.x_vel < 0) {
+        pops.x_vel += 10;
+    }
+    if (pops.y_vel > 40) {
+        pops.y_vel -= 1;
+    } else if (pops.y_vel < 0) {
+        pops.y_vel += 1;
+    }
 
     popsGravity();
     popsEnforceBounds();
@@ -131,9 +148,9 @@ function update(mod) {
 
 function popsGravity() {
      if(pops.y_vel < canvas.height/4) {
-        pops.y_vel += fallspeed;
+        pops.y_vel += (fallspeed*3);
     }
-    if(pops.y_vel > 15) {
+    if(pops.y_vel > 30) {
         downwards = true;
         fallspead = 2;
         if(dogImage === dogL || dogImage === dogLPara) {
@@ -155,23 +172,23 @@ function moveAnemies(mod) {
     for (var i=0;i<numAnemies;i++) {
 
         if(Anemies[i].x>(canvas.width/2)) {
-            Anemies[i].x_vel -= .25;
-        } else if(Anemies[i].x>(canvas.width/2)) {
             Anemies[i].x_vel -= .125;
+        } else if(Anemies[i].x>(canvas.width/2)) {
+            Anemies[i].x_vel -= .0625;
         } else if(Anemies[i].x<(canvas.width/2)) {
-            Anemies[i].x_vel += .125;
+            Anemies[i].x_vel += .0625;
         } else {
-            Anemies[i].x_vel += 25;
+            Anemies[i].x_vel += .125;
         }
 
         if(Anemies[i].y>(canvas.height/2)) {
-            Anemies[i].y_vel -= .25;
+            Anemies[i].y_vel -= .07;
         } else if(Anemies[i].y>(canvas.height/2)) {
-            Anemies[i].y_vel -= .125;
+            Anemies[i].y_vel -= .0625;
         } else if(Anemies[i].y<(canvas.height/2)) {
-            Anemies[i].y_vel += .125;
+            Anemies[i].y_vel += .0625;
         } else {
-            Anemies[i].y_vel += .25;
+            Anemies[i].y_vel += .125;
         }
     }
     for (var j=0;j<numAnemies;j++) {
@@ -197,23 +214,21 @@ function popsEnforceBounds() {
     if (pops.y > (canvas.height-pops.height)) {
         pops.y = canvas.height-pops.height;
         pops.y_vel = 0;
+        pops.x_vel = 0;
+        downwards = false;
         jump = false;
     }
 }
  
 function render() {
-    ctx.fillStyle = "#FFFFFF";
-    // var radgrad4 = ctx.createLinearGradient(0,0,0,canvas.height);
-    //     radgrad4.addColorStop(0, "white");
-    //     radgrad4.addColorStop(1, "#FFFF90");
+    // ctx.fillStyle = "#FFFFFF";
+    // ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    // ctx.fillStyle = radgrad4;
-
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(bg,0,0);
 
     for(var i=0; i<numAnemies;i++) {
         ctx.fillStyle = '#00F';
-        ctx.fillRect(Anemies[i].x,Anemies[i].y,Anemies[i].width,Anemies[i].height);
+        ctx.drawImage(astr, Anemies[i].x,Anemies[i].y,Anemies[i].width,Anemies[i].height);
     }
 
     ctx.drawImage(dogImage, pops.x, pops.y, pops.width, pops.height);
@@ -225,37 +240,46 @@ function render() {
 function resetPops() {
     onBlock = -1;
     pops.x_vel = 0;
+    
 }
 
 function bounce(i) {
-    pops.x_vel *= -1;
-    pops.x_vel *= -1;
-    Anemies[i].x_vel *= -1;
-    Anemies[i].x_vel *= -1;
-
+    
 }
 
 function collisions() {
     for (var i=0;i<numAnemies;i++) {
-        if (pops.y > (Anemies[i].y-Anemies[i].height) && pops.y < (Anemies[i].y)) {
-            if (pops.mid > Anemies[i].x && pops.mid < (Anemies[i].x+Anemies[i].width)) {
-                // onBlock = i;
-                // jump = false;
-                bounce(i);
-            } else { resetPops() }
-        } else { resetPops() }
-    }
-    if (onBlock > -1) {
-        pops.x_vel = Anemies[onBlock].x_vel;
-        pops.y_vel = Anemies[onBlock].y_vel;
+        if(Anemies[i].x >= pops.x && Anemies[i].x <= pops.x +pops.width) {
+            // hit the left side
+            if (Anemies[i].y >= pops.y && Anemies[i].y <= pops.y +pops.height) {
+                // hit bottom
+                pops.x_vel = -500;
+                pops.y_vel = 500;
+            } else if (Anemies[i].y <= pops.y && Anemies[i].y + Anemies[i].height >= pops.y) {
+                // hit top
+                pops.x_vel = -500;
+                pops.y_vel = -500;
+            }
+        } else if (Anemies[i].x <= pops.x && Anemies[i].x + Anemies[i].width >= pops.x) {
+            // hit the right side
+            if (Anemies[i].y >= pops.y && Anemies[i].y <= pops.y +pops.height) {
+                // hit bottom
+                pops.x_vel = 500;
+                pops.y_vel = 500;
+            } else if (Anemies[i].y <= pops.y && Anemies[i].y + Anemies[i].height >= pops.y) {
+                // hit top
+                pops.x_vel = 500;
+                pops.y_vel = -500;
+            }
+        }
     }
 }
  
 function run() {
-    if(blockUpdateCounter > 1) {
+    // if(blockUpdateCounter > 1) {
         moveAnemies();
-        blockUpdateCounter = 0;
-    } blockUpdateCounter++;
+        // blockUpdateCounter = 0;
+    // } blockUpdateCounter++;
     update((Date.now() - time) / 1000);
     collisions();
     render();
