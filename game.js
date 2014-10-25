@@ -92,6 +92,7 @@ function loadImages() {
     para.src = (("game/pics/Para.png"));
     bg = new Image();
     bg.src = (("game/pics/SpaceBackground.jpg"));
+    
 }
  
 var keysDown = {};
