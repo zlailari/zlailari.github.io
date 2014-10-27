@@ -22,6 +22,8 @@ var originalHeight = 400;
 var blockUpdateCounter = 0;
 var onBlock = -1;
 
+var startTouch, endTouch;
+
 var pops = {
     x: 200,
     y: 200,
@@ -101,6 +103,39 @@ window.addEventListener('keydown', function(e) {
 window.addEventListener('keyup', function(e) {
     delete keysDown[e.keyCode];
 });
+
+// Basic code for mobile/touch screen
+window.addEventListener('touchstart', this.touchStart, false);
+function touchStart(evt) {
+    // Mobile up
+    if(!jump) {
+        pops.y_vel = -canvas.height/2 - (4000/pops.height);
+        fallspeed = 1;
+        jump = true; 
+    } 
+    startTouch = {x:evt.touches[0].pageX, y:evt.touches[0].pageY};
+
+}
+window.addEventListener('touchmove', this.touchMove, false);
+function touchMove(evt) {
+    // Store move points as last point so we can 
+    //  calculate which way was swiped
+    endTouch = {x:e.touches[0].pageX, y:e.touches[0].pageY};
+}
+
+
+window.addEventListener('touchend', this.touchEnd, false);
+function touchEnd(evt) {
+    if (touchStart.x > endTouch.x) {
+        // left
+        pops.x -= pops.mov_speed * mod;
+        dogImage = dogL;
+    } else {  
+        // right
+        pops.x += pops.mov_speed * mod;
+        dogImage = dogR;
+    }
+}
  
 function update(mod) {
     // Control keys
