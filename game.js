@@ -4,10 +4,11 @@
 var canvas,ctx;
 var time;
 
+// constant for size of character and enemies
 var blockSize = 30;
 var numAnemies = 8;
-var rend = 0;
 
+// All images
 var dogR, dogL, dogRPara, dogLPara, para, bg, astr;
 var dogImage = dogR;
 
@@ -22,19 +23,23 @@ var originalHeight = 400;
 var blockUpdateCounter = 0;
 var onBlock = -1;
 
+// used for touch
 var startTouch, endTouch;
 
+// Initialize your character
 var pops = {
     x: 200,
     y: 200,
     width: blockSize,
     height: blockSize,
-    mid: 200+(blockSize/2),
+    //mid: 200+(blockSize/2),
     mov_speed: 200,
     x_vel: 0,
     y_vel: 0,
     color: '#c00'
 };
+
+// Initialize enemies
 var Anemies = [];
 for(var i=0;i<numAnemies;i++) {
     Anemies.push({
@@ -78,10 +83,14 @@ function resetGame() {
 }
 
 function loadImages() {
-    //dogs
+    // Background image
+    bg = new Image();
+    bg.src = (("game/pics/SpaceBackground.jpg"));
     astr = new Image();
+    // Astroid Image
     astr.src = (("game/pics/Astroid.png"));
     dogRPara = new Image();
+    // Dog and parachute images
     dogRPara.src = (("game/pics/DogRPara.png"));
     dogLPara = new Image();
     dogLPara.src = (("game/pics/DogLPara.png"));
@@ -114,6 +123,7 @@ function touchStart(evt) {
         jump = true; 
     } 
     startTouch = {x:evt.touches[0].pageX, y:evt.touches[0].pageY};
+    var nextTouches
 
 }
 window.addEventListener('touchmove', this.touchMove, false);
@@ -162,9 +172,8 @@ function update(mod) {
     if (40 in keysDown) {
         // pops.y += pops.speed * mod;
     }
-    pops.y += pops.y_vel * mod;
-    pops.x += pops.x_vel * mod;
 
+    // enforce max/min velocity conditions
     if (pops.x_vel > 0) {
         pops.x_vel -= 10;
     } else if (pops.x_vel < 0) {
@@ -176,9 +185,16 @@ function update(mod) {
         pops.y_vel += 1;
     }
 
+    // set new character position
+    pops.y += pops.y_vel * mod;
+    pops.x += pops.x_vel * mod;
+
+    // sets up variables for next update and chooses picture
     popsGravity();
+
     popsEnforceBounds();
-    pops.mid = pops.x + (pops.width/2);
+
+    // pops.mid = pops.x + (pops.width/2);
 }
 
 function popsGravity() {
@@ -205,7 +221,7 @@ function popsGravity() {
 
 function moveAnemies(mod) {
     for (var i=0;i<numAnemies;i++) {
-
+        // makes enemy x velocities orbit middle of canvas
         if(Anemies[i].x>(canvas.width/2)) {
             Anemies[i].x_vel -= .125;
         } else if(Anemies[i].x>(canvas.width/2)) {
@@ -216,6 +232,7 @@ function moveAnemies(mod) {
             Anemies[i].x_vel += .125;
         }
 
+        // makes enemy y velocities orbit mid of canvas
         if(Anemies[i].y>(canvas.height/2)) {
             Anemies[i].y_vel -= .07;
         } else if(Anemies[i].y>(canvas.height/2)) {
@@ -226,6 +243,7 @@ function moveAnemies(mod) {
             Anemies[i].y_vel += .125;
         }
     }
+    // update enemy positions
     for (var j=0;j<numAnemies;j++) {
         Anemies[j].x += Anemies[j].x_vel;
         Anemies[j].y += Anemies[j].y_vel;
