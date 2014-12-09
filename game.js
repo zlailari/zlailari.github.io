@@ -26,6 +26,8 @@ var onBlock = -1;
 // used for touch
 var startTouch, endTouch;
 
+var startRender = false;
+
 // Initialize your character
 var pops = {
     x: 200,
@@ -86,6 +88,9 @@ function loadImages() {
     // Background image
     bg = new Image();
     bg.src = (("game/pics/SpaceBackground.jpg"));
+    bg.onload = function() {
+        startRender = true;
+    }
     astr = new Image();
     // Astroid Image
     astr.src = (("game/pics/Astroid.png"));
@@ -276,17 +281,18 @@ function popsEnforceBounds() {
 function render() {
     // ctx.fillStyle = "#FFFFFF";
     // ctx.fillRect(0, 0, canvas.width, canvas.height);
+    if (startRender){
+        ctx.drawImage(bg,0,0);
 
-    ctx.drawImage(bg,0,0);
+        for(var i=0; i<numAnemies;i++) {
+            ctx.fillStyle = '#00F';
+            ctx.drawImage(astr, Anemies[i].x,Anemies[i].y,Anemies[i].width,Anemies[i].height);
+        }
 
-    for(var i=0; i<numAnemies;i++) {
-        ctx.fillStyle = '#00F';
-        ctx.drawImage(astr, Anemies[i].x,Anemies[i].y,Anemies[i].width,Anemies[i].height);
-    }
-
-    ctx.drawImage(dogImage, pops.x, pops.y, pops.width, pops.height);
-    if(downwards) {
-        ctx.drawImage(para, pops.x, pops.y-pops.height, pops.width, pops.height);        
+        ctx.drawImage(dogImage, pops.x, pops.y, pops.width, pops.height);
+        if(downwards) {
+            ctx.drawImage(para, pops.x, pops.y-pops.height, pops.width, pops.height);        
+        }
     }
 }
 
