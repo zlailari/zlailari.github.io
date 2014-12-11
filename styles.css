@@ -1,19 +1,24 @@
 #bCanvas{
-position:fixed;
-top: 0;
-left: 0;
-z-index:-1;
+	position:fixed;
+	top: 0;
+	left: 0;
+	z-index:-1;
 }
 body {
-background-size: 100%;
-color: #f5f6fa;
-text-align: right;
+	background-size: 100%;
+	color: #f5f6fa;
+	text-align: right;
+}
+
+hr {
+	width: 350px;
+	margin-right: 0;
 }
 
 a {
-text-decoration: none;
-color: #f5f6fa;
+	text-decoration: none;
+	color: #f5f6fa;
 }
 a:visited {
-text-decoration: none;
+	text-decoration: none;
 }
