@@ -15,6 +15,16 @@
         </script>
     </head>
     <body>
-       <iframe src="http://docs.google.com/gview?url=http://path.com/to/your/pdf.pdf&embedded=true" style="width:600px; height:500px;" frameborder="0"></iframe> 
+       <div id="pdfRenderer"></div> 
+
+       <script>
+	      var pdf = new PDFObject({
+			  url: "https://github.com/zlailari/zlailari.github.io/raw/master/Lailari_Resume.pdf",
+			  id: "pdfRendered",
+			  pdfOpenParams: {
+			    view: "FitH"
+			  }
+		  }).embed("pdfRenderer");
+       </script>
     </body>
 </html>
