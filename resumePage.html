@@ -15,16 +15,8 @@
         </script>
     </head>
     <body>
-       <div id="pdfRenderer"></div> 
-
-       <script>
-	      var pdf = new PDFObject({
-			  url: "https://github.com/zlailari/zlailari.github.io/raw/master/Lailari_Resume.pdf",
-			  id: "pdfRendered",
-			  pdfOpenParams: {
-			    view: "FitH"
-			  }
-		  }).embed("pdfRenderer");
-       </script>
+        <object data="https://github.com/zlailari/zlailari.github.io/raw/master/Lailari_Resume.pdf" type="application/pdf" width="300" height="200">
+		  alt : <a href="http://lailari.me">test.pdf</a>
+		</object>
     </body>
 </html>
