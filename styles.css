@@ -22,3 +22,12 @@ a {
 a:visited {
 	text-decoration: none;
 }
+
+.bookpage {
+	color: #000000;
+	text-align: center;
+}
+
+.book {
+	float: center;
+}
