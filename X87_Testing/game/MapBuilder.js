@@ -18,11 +18,11 @@ profit!
 */
 
 var mapNames = [ 
-	'What is Jumping?', // 0 
-	'Unnamed', // 1 
-    '!littleBoxes?', // 2
-    'letters', // 3
-    'Natan', // 4
+    'What is Jumping?', // 0
+    'littleBoxes', // 1
+    'difficult', // 2
+    'very-difficult', // 3
+    'Natan!!!', // 4
 ];
 
 
@@ -313,15 +313,6 @@ loadMap = function(mapID, walls, platforms, lava, gameSizes, cakeLocation) {//, 
 			genPlatform(platforms,110,1800,10,10,false,false);
 			genPlatform(platforms,110,1700,10,10,false,false);
 			break;
-		case 'Unnamed':
-
-			gameSizes.width = 2300;
-			gameSizes.height = 600;
-
-			cakeLocation.x = 210;
-			cakeLocation.y = 400;
-
-			break;
         case '!littleBoxes?':
 			gameSizes.width = 4000;
 			gameSizes.height = 700;
@@ -332,25 +323,42 @@ loadMap = function(mapID, walls, platforms, lava, gameSizes, cakeLocation) {//, 
 			    genDiamond(platforms, i*100, Math.random()*500+200, 10, true, false);
             }
             break;
-        case 'letters':
-            cakeLocation.x = 300;
-            cakeLocation.y = 300;
-            // genLetter_y(walls, platforms, 250, 250, 25);
-            // genLetter_a(walls, platforms, 250, 250, 15);
-            // genLetter_d(walls, platforms, 250, 250, 15);
-            // genLetter_t(walls, platforms, 250, 250, 20);
-            // genLetter_r(walls, platforms, 250, 250, 15);
-            // genLetter_p(walls, platforms, 250, 250, 20);
-            // genLetter_h(walls, platforms, 250, 250, 15);
-            // genLetter_i(walls, platforms, 250, 250, 20);
-            // genLetter_cap_b(walls, platforms, 250, 250, 20);
-            // genLetter_cap_h(walls, platforms, 250, 250, 15);
-            // genLetter_u(walls, platforms, 250, 250, 15);
-            // genLetter_l(walls, platforms, 250, 250, 15);
-            // genLetter_n(walls, platforms, 350, 250, 15);
-            genLetter_cap_n(walls, platforms, 250, 250, 20);
+        case 'difficult':
+			gameSizes.width = 3400;
+			gameSizes.height = 800;
+            cakeLocation.x = 3254;
+            cakeLocation.y = 700;
+
+            for (var i=0; i<10; i++) {
+                genWall(walls, platforms, 100+(i*150), 700-(i*50), 10, 100);
+                genPlatform(platforms, 50+(i*150), 700-(i*50), 30, 10);
+            }
+
+            genWall(walls, platforms, 1700, 250, 10, 600);
+
+            for (var i=0; i<10; i++) {
+                genWall(walls, platforms, 1800+(i*150), 700-(i*50), 10, 100);
+                genPlatform(platforms, 1790+(i*150), 700-(i*50), 30, 10);
+            }
             break;
-        case "Natan":
+        case 'very-difficult':
+			gameSizes.width = 3400;
+			gameSizes.height = 800;
+            cakeLocation.x = 3254;
+            cakeLocation.y = 300;
+
+            for (var i=0; i<10; i++) {
+                genWall(walls, platforms, 100+(i*150), 700-(i*50), 10, 100);
+                genPlatform(platforms, 95+(i*150), 700-(i*50), 20, 10);
+            }
+
+            genWall(walls, platforms, 1700, 250, 10, 600);
+
+            for (var i=0; i<10; i++) {
+                genWall(walls, platforms, 1800+(i*150), 700-(i*50), 10, 100);
+            }
+            break;
+        case "Natan!!!":
 			gameSizes.width = 3100;
 			gameSizes.height = 650;
             cakeLocation.x = 2970;

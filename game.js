@@ -105,7 +105,9 @@ function loadImages() {
     dogL.src = (("game/pics/DogL.png"));
     dogImage = dogRPara;
     para = new Image();
-    para.src = (("game/pics/Para.png"));    
+    para.src = (("game/pics/Para.png"));
+    bg = new Image();
+    bg.src = (("game/pics/SpaceBackground.jpg"));
 }
  
 var keysDown = {};
